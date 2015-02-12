@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System.Threading.Tasks;
+using Boids.Managers;
+using Boids.Models;
+using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 
 namespace Boids.Hubs
@@ -16,6 +19,36 @@ namespace Boids.Hubs
         {
 
         }
+
+        public Task OnStartConnect(Settings model)
+        {
+            InitializerManager.GetInstance().StartNewRound(model);
+            return null;
+        }
+
+        public Task GiveMeBoid()
+        {
+            InitializerManager.GetInstance().AddNewBoid();
+            return null;
+        }
+        public Task GetBoidList()
+        {
+            InitializerManager.GetInstance().GetBoidList();
+            return null;
+        }
+
+
+        public Task Stop()
+        {
+            return null;
+        }
+
+        public Task UpdateSettings()
+        {
+            return null;
+        }
+       
+        
     }
 
     public class ShapeModel

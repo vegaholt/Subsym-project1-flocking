@@ -8,7 +8,7 @@ namespace Boids.Managers
 {
     public class BoidManager
     {
-        public void InitBoid()
+        public Boid InitBoid()
         {
             var boid = new Boid
             {
@@ -17,6 +17,7 @@ namespace Boids.Managers
             };
             
             boid.Velocity = BoidHelper.AdjustVelocity(new Velocity(), 5);
+            return boid;
         }
 
         #region Detect Neighbours

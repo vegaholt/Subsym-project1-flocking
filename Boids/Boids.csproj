@@ -119,10 +119,8 @@
   <ItemGroup>
     <Compile Include="Helpers\BoidHelper.cs" />
     <Compile Include="Hubs\BoidHub.cs" />
-    <Compile Include="Hubs\ObstacleHub.cs" />
-    <Compile Include="Hubs\PredatorHub.cs" />
-    <Compile Include="Hubs\SettingsHub.cs" />
     <Compile Include="Managers\BoidManager.cs" />
+    <Compile Include="Managers\InitializerManager.cs" />
     <Compile Include="Managers\ObstacleManager.cs" />
     <Compile Include="Managers\PredatorManager.cs" />
     <Compile Include="Managers\SettingsManager.cs" />

@@ -30,42 +30,49 @@
 
         buildWorld(boids, settings);
 
-        var boidHub = $.connection.boidHub,
-            $shape = $("#shape"),
-            // Send a maximum of 10 messages per second 
-            // (mouse movements trigger a lot of messages)
-            messageFrequency = 10,
-            // Determine how often to send messages in
-            // time to abide by the messageFrequency
-            updateRate = 1000 / messageFrequency,
-            shapeModel = {
-                left: 0,
-                top: 0
-            },
-            moved = false;
-        boidHub.client.updateShape = function(model) {
-            shapeModel = model;
-            $shape.css({ left: model.left, top: model.top });
-        };
+        window.boidHub = $.connection.boidHub;
+
         $.connection.hub.start().done(function() {
-            $shape.draggable({
-                drag: function() {
-                    shapeModel = $shape.offset();
-                    moved = true;
-                }
-            });
-            // Start the client side server update interval
-            setInterval(updateServerModel, updateRate);
+            
         });
 
-        function updateServerModel() {
-            // Only update server if we have a new movement
-            if (moved) {
-                boidHub.server.updateModel(shapeModel);
-                moved = false;
-            }
-        }
+        //CLIENT METHODS
+        boidHub.client.updateBoidPossition = function(model) {
+            var possition = model.position;
+            var velocity = model.velocity;
+            var id = model.id;
+            console.log(possition);
+            console.log(velocity);
+            console.log(id);
+
+        };
+        boidHub.client.addNewBoid = function (model) {
+            var possition = model.position;
+            var velocity = model.velocity;
+            var id = model.id;
+            console.log("Adding new boid");
+            console.log(possition);
+            console.log(velocity);
+            console.log(id);
+
+        };
+        boidHub.client.logBoidList = function (model) {
+            console.log(model);
+
+        };
+
+
+        //SERVER METHODS
+        
+        
     });
+    function giveMeNewBoid() {
+        boidHub.server.giveMeBoid();
+    }
+    function getBoidList() {
+        boidHub.server.getBoidList();
+
+    }
 
     //BUILD WORLD
     function buildWorld(boids, settings) {
@@ -83,6 +90,7 @@
                 'px;"></div></div>');
         });
     }
+
 
     //GUI
     $(document).ready(function() {
