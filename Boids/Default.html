@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>SubSym AI - Project 1 - Boids</title>
+    <link href="Content/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="Content/css/bootstrap-slider.css" rel="stylesheet"/>
+    <link href="Content/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<script src="Scripts/jquery-2.1.3.min.js"></script>
+<script src="Scripts/jquery.signalR-2.2.0.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<script src="Scripts/bootstrap-slider.js"></script>
+<script src="signalr/hubs"></script>
+<script>
+    $(function () {
+
+        var settings = { boidRadius: 8 };
+
+        var boids = [
+        {
+            id: 1, position: { x: 0, y: 0 }, velocity: { x: -2, y: -2 }
+        }, {
+            id: 2, position: { x: 0, y: 100 }, velocity: { x: -2, y: 5 }
+        }, {
+            id: 3, position: { x: 100, y: 0 }, velocity: { x: -2, y: -2 }
+        }, {
+            id: 4, position: { x: 100, y: 100 }, velocity: { x: -2, y: -2 }
+        }];
+
+        buildWorld(boids, settings);
+
+        var boidHub = $.connection.boidHub,
+            $shape = $("#shape"),
+            // Send a maximum of 10 messages per second 
+            // (mouse movements trigger a lot of messages)
+            messageFrequency = 10,
+            // Determine how often to send messages in
+            // time to abide by the messageFrequency
+            updateRate = 1000 / messageFrequency,
+            shapeModel = {
+                left: 0,
+                top: 0
+            },
+            moved = false;
+        boidHub.client.updateShape = function(model) {
+            shapeModel = model;
+            $shape.css({ left: model.left, top: model.top });
+        };
+        $.connection.hub.start().done(function() {
+            $shape.draggable({
+                drag: function() {
+                    shapeModel = $shape.offset();
+                    moved = true;
+                }
+            });
+            // Start the client side server update interval
+            setInterval(updateServerModel, updateRate);
+        });
+
+        function updateServerModel() {
+            // Only update server if we have a new movement
+            if (moved) {
+                boidHub.server.updateModel(shapeModel);
+                moved = false;
+            }
+        }
+    });
+
+    //BUILD WORLD
+    function buildWorld(boids, settings) {
+        $.each(boids, function () {
+            $("#world").append(
+                '<div class="boid" id="' + this.id +
+                '" style="left:' + ((this.position.x * 800 / 100) - settings.boidRadius) +
+                'px; top: ' + ((this.position.y * 600 / 100) - settings.boidRadius) +
+                'px; width:' + (settings.boidRadius * 2) +
+                'px; height:' + (settings.boidRadius * 2) +
+                'px; border-radius:' + (settings.boidRadius) +
+                'px;"><div class="velocity" style="left:' + settings.boidRadius +
+                'px; top:' + settings.boidRadius +
+                'px; width:' + (settings.boidRadius + 5) +
+                'px;"></div></div>');
+        });
+    }
+
+    //GUI
+    $(document).ready(function() {
+        $("#boid-radius").slider({
+            formatter: function(value) {
+                return value;
+            }
+        });
+
+        $("#separation-weight").slider({
+            formatter: function(value) {
+                return value;
+            }
+        });
+
+        $("#alignment-weight").slider({
+            formatter: function(value) {
+                return value;
+            }
+        });
+
+        $("#cohesion-weight").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#neighbour-radius").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#collision-radius").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#avoidance-radius").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#boid-velocity").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#obstacle-radius").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#predator-radius").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        $("#predator-velocity").slider({
+            formatter: function (value) {
+                return value;
+            }
+        });
+
+        
+    });
+</script>
+
+<div id="shape"></div>
+<div class="container mainwrapper">
+    <div class="row">
+        <!--Settings-->
+        <div class="col-md-3">
+            <div class="panel panel-default settings-outter">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Settings</h3><br/>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#boids" aria-controls="boids" role="tab" data-toggle="tab">Boids</a></li>
+                        <li role="presentation"><a href="#obstacles" aria-controls="obstacles" role="tab" data-toggle="tab">Obstacles</a></li>
+                        <li role="presentation"><a href="#predators" aria-controls="predators" role="tab" data-toggle="tab">Predators</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="boids">
+                            <p>
+                                Number of boids<br/>
+                                <input type="number" class="form-control" id="boid-number" value="100">
+                            </p>
+                            <p>
+                                Radius<br/>
+                                <input id="boid-radius" class="bootstrap-slider" data-slider-id='boid-radius-slider' type="text" data-slider-min="0" data-slider-max="15" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Separation weight<br />
+                                <input id="separation-weight" class="bootstrap-slider" data-slider-id='separation-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Alignment weight<br />
+                                <input id="alignment-weight" class="bootstrap-slider" data-slider-id='alignment-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            <p/>
+                            <p>
+                                Cohesion weight<br/>
+                                <input id="cohesion-weight" class="bootstrap-slider" data-slider-id='cohesion-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Neighbour radius<br/>
+                                <input id="neighbour-radius" class="bootstrap-slider" data-slider-id='neighbour-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Collision radius<br/>
+                                <input id="collision-radius" class="bootstrap-slider" data-slider-id='collision-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Avoidance radius<br/>
+                                <input id="avoidance-radius" class="bootstrap-slider" data-slider-id='avoidance-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Max velocity<br />
+                                <input id="boid-velocity" class="bootstrap-slider" data-slider-id='boid-velocity-slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="5" />
+                            </p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="obstacles">
+                            <p>
+                                Number of obstacles<br />
+                                <input type="number" class="form-control" id="obstacle-number" value="100">
+                            </p>
+                            <p>
+                                Radius<br />
+                                <input id="obstacle-radius" class="bootstrap-slider" data-slider-id='obstacle-radius-slider' type="text" data-slider-min="0" data-slider-max="15" data-slider-step="1" data-slider-value="5" />
+                            </p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="predators">
+                            <p>
+                                Number of predators<br />
+                                <input type="number" class="form-control" id="predator-number" value="100">
+                            </p>
+                            <p>
+                                Radius<br/>
+                                <input id="predator-radius" class="bootstrap-slider" data-slider-id='predator-radius-slider' type="text" data-slider-min="0" data-slider-max="15" data-slider-step="1" data-slider-value="5"/>
+                            </p>
+                            <p>
+                                Max velocity<br />
+                                <input id="predator-velocity" class="bootstrap-slider" data-slider-id='predator-velocity-slider' type="text" data-slider-min="0" data-slider-max="15" data-slider-step="1" data-slider-value="5" />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--World-->
+        <div class="col-md-9">
+            <div class="well world-outter">
+                <div id="world"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

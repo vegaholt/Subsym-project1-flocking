@@ -1,0 +1,6 @@
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\bin\Debug\FileSystemAssignment.exe.config
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\bin\Debug\FileSystemAssignment.exe
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\bin\Debug\FileSystemAssignment.pdb
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\obj\Debug\FileSystemAssignment.csprojResolveAssemblyReference.cache
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\obj\Debug\FileSystemAssignment.exe
+C:\Users\vegaholt\Documents\Subsym\Subsym-project1-flocking\FileSystemAssignment\obj\Debug\FileSystemAssignment.pdb
