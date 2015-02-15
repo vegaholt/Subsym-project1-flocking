@@ -25,7 +25,7 @@
 
 .boid {
     position: absolute;
-    background-color: red;
+    background-color: red !important;
 }
 
 .velocity {
@@ -36,7 +36,12 @@
 
 .obstacle {
     position: absolute;
-    background-color: green;
+    background-color: green !important;
+}
+
+.predator {
+    position: absolute;
+    background-color: blue !important;
 }
 
 .settings-outter {

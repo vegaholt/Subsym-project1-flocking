@@ -22,7 +22,7 @@ namespace Boids.Managers
                 NeighbourRadiusBoid = 100,
                 CollisionRadiusBoid = 50,
                 ThreathDetectionRadius = 150,
-                Interval = 500
+                Interval = 200
             };
         }
     }

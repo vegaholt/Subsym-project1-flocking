@@ -106,8 +106,8 @@ namespace Boids.Managers
 
             SendObstacleListToClient();
 
-            //_predatorManager.UpdatePredators();
-            //SendPredatorListToClient();
+            _predatorManager.CalculateNewVelocityForPredators(_predators, _settings);
+            SendPredatorListToClient();
         }
 
         public void StartFlocking()
@@ -178,7 +178,7 @@ namespace Boids.Managers
             }
             else if (settings.NumberOfObstacles < _numberOfObstacles)
             {
-                //Remove boids
+                //Remove obstacle
                 var startIndex = _settings.NumberOfObstacles;
                 var endIndex = _numberOfObstacles;
 
@@ -189,6 +189,38 @@ namespace Boids.Managers
                 {
                     var obstacle = _obstacles.FirstOrDefault(x => x.Id == i);
                     _obstacles.Remove(obstacle);
+                }
+            }
+
+            //If different number of predators
+            if (settings.NumberOfPredators > _numberOfPredators)
+            {
+                //Add predator
+                var startIndex = _numberOfPredators;
+                var endIndex = _settings.NumberOfPredators;
+
+                _numberOfPredators = _settings.NumberOfPredators;
+
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var predator = _predatorManager.CreateNewPredator();
+                    predator.Id = _predatorIdCounter++;
+                    _predators.Add(predator);
+                }
+            }
+            else if (settings.NumberOfPredators < _numberOfPredators)
+            {
+                //Remove predator
+                var startIndex = _settings.NumberOfPredators;
+                var endIndex = _numberOfPredators;
+
+                _predatorIdCounter = _settings.NumberOfPredators;
+                _numberOfPredators = _settings.NumberOfPredators;
+
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var predator = _predators.FirstOrDefault(x => x.Id == i);
+                    _predators.Remove(predator);
                 }
             }
         }
@@ -208,6 +240,11 @@ namespace Boids.Managers
         public void SendObstacleListToClient()
         {
             _hub.Clients.All.hubDrawObstacleList(_obstacles);
+        }
+
+        public void SendPredatorListToClient()
+        {
+            _hub.Clients.All.hubDrawPredatorList(_predators);
         }
         #endregion
     }

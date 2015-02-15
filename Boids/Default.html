@@ -44,6 +44,12 @@
             UIdrawObstacles();
         }
         
+        window.boidHub.client.hubDrawPredatorList = function (model) {
+            _predators = model;
+            console.log("predators");
+            UIdrawPredators();
+        }
+        
 
     });
 
@@ -92,6 +98,23 @@
                 'px; height:' + (_settings.obstacleRadius * 2) +
                 'px; border-radius:' + (_settings.obstacleRadius) +
                 'px;"></div>');
+        });
+    }
+
+    function UIdrawPredators() {
+        $.each(_predators, function () {
+            $("#world").append(
+                '<div class="predator" id="predator-' + this.id +
+                '" style="left:' + ((this.position.x * 800 / 100) - _settings.predatorRadius) +
+                'px; top: ' + ((this.position.y * 600 / 100) - _settings.predatorRadius) +
+                'px; width:' + (_settings.predatorRadius * 2) +
+                'px; height:' + (_settings.predatorRadius * 2) +
+                'px; border-radius:' + (_settings.predatorRadius) +
+                'px; -webkit-transform: rotate(' + this.velocity.deg +
+                'deg);"><div class="velocity" style="left:' + _settings.predatorRadius +
+                'px; top:' + _settings.predatorRadius +
+                'px; width:' + (_settings.predatorRadius + 5) +
+                'px;"></div></div>');
         });
     }
 
@@ -253,7 +276,7 @@
             <button type="button" class="btn btn-danger btn-md pull-right" id="main_stop">Stop</button>
             <p>
                 Interval<br />
-                <input type="number" class="form-control" id="interval" value="500">
+                <input type="number" class="form-control" id="interval" value="200">
             </p>
         </div>
         <div class="col-md-3">

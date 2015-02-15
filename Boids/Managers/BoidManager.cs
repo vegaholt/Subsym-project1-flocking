@@ -29,7 +29,7 @@ namespace Boids.Managers
         }
 
         #region Update Boid
-        public List<Boid> CalculateNewVelocityForBoids(List<Boid> boids, Settings settings)
+        public void CalculateNewVelocityForBoids(List<Boid> boids, Settings settings)
         {
             foreach (var boid in boids)
             {
@@ -105,7 +105,6 @@ namespace Boids.Managers
 
                 UpdateBoid(boid, newVelocity);*/
             }
-            return boids;
         }
 
         private Velocity CalculateSeparationVelocity(List<Boid> neighbours, Boid boid)
