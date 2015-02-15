@@ -7,12 +7,12 @@ namespace Boids.Helpers
     {
         public static Random RandomGenerator = new Random();
 
-        public static float GetRandomNumber(float min, float max)
+        public static double GetRandomNumber(double min, double max)
         {
-            return (float) (min + RandomGenerator.NextDouble() * (max - min));
+            return (double) (min + RandomGenerator.NextDouble() * (max - min));
         }
 
-        public static Velocity AdjustVelocity(Velocity velocity, float maxVelocity)
+        public static Velocity AdjustVelocity(Velocity velocity, double maxVelocity)
         {
             var oldVelocity = Math.Sqrt(Math.Pow(velocity.X, 2) + Math.Pow(velocity.Y, 2));
             if (oldVelocity <= maxVelocity) return velocity;
@@ -21,8 +21,8 @@ namespace Boids.Helpers
 
             var newVelocity = new Velocity()
             {
-                X = (float)(velocity.X * scale),
-                Y = (float)(velocity.Y * scale)
+                X = (double)(velocity.X * scale),
+                Y = (double)(velocity.Y * scale)
             };
 
             return newVelocity;

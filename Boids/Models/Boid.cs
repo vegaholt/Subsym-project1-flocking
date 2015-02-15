@@ -12,6 +12,5 @@ namespace Boids.Models
 
         [JsonProperty("velocity")]
         public Velocity Velocity { get; set; }
-
     }
 }

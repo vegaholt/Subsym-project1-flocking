@@ -1,5 +1,6 @@
 ﻿.mainwrapper {
     padding-top: 40px;
+    overflow: hidden;
 }
 
 .bootstrap-slider .slider-selection {
@@ -31,6 +32,11 @@
     position: absolute;
     height: 1px;
     background: black;
+}
+
+.obstacle {
+    position: absolute;
+    background-color: green;
 }
 
 .settings-outter {

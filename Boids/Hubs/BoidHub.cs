@@ -2,70 +2,37 @@
 using Boids.Managers;
 using Boids.Models;
 using Microsoft.AspNet.SignalR;
-using Newtonsoft.Json;
 
 namespace Boids.Hubs
 {
     public class BoidHub : Hub
     {
-        public void UpdateModel(ShapeModel clientModel)
+        #region Initial Methods
+        public Task InitializeWorld()
         {
-            clientModel.LastUpdatedBy = Context.ConnectionId;
-            // Update the shape model within our broadcaster
-            Clients.AllExcept(clientModel.LastUpdatedBy).updateShape(clientModel);
-        }
-
-        public void UpdateWorld(FlockModel clientModel)
-        {
-
-        }
-
-        public Task OnStartConnect(Settings model)
-        {
-            InitializerManager.GetInstance().StartNewRound(model);
+            InitializerManager.GetInstance().SendSettingsToClient();
+            InitializerManager.GetInstance().SendBoidListToClient();
             return null;
         }
+        #endregion
 
-        public Task GiveMeBoid()
+        #region Runtime Methods
+        public Task StartFlocking()
         {
-            InitializerManager.GetInstance().AddNewBoid();
+            InitializerManager.GetInstance().StartFlocking();
             return null;
         }
-        public Task GetBoidList()
+        public Task StopFlocking()
         {
-            InitializerManager.GetInstance().GetBoidList();
+            InitializerManager.GetInstance().StopFlocking();
             return null;
         }
+        #endregion
 
-
-        public Task Stop()
+        public Task UpdateSettings(Settings settings)
         {
+            InitializerManager.GetInstance().UpdateSettings(settings);
             return null;
         }
-
-        public Task UpdateSettings()
-        {
-            return null;
-        }
-       
-        
-    }
-
-    public class ShapeModel
-    {
-        // We declare Left and Top as lowercase with 
-        // JsonProperty to sync the client and server models
-        [JsonProperty("left")]
-        public double Left { get; set; }
-        [JsonProperty("top")]
-        public double Top { get; set; }
-        // We don't want the client to get the "LastUpdatedBy" property
-        [JsonIgnore]
-        public string LastUpdatedBy { get; set; }
-    }
-
-    public class FlockModel
-    {
-
     }
 }

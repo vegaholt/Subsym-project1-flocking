@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using System.Web;
 using Boids.Hubs;
 using Boids.Models;
@@ -10,6 +11,7 @@ namespace Boids.Managers
 {
     public class InitializerManager
     {
+        #region Initialize Methods
         private static IHubContext _hub;
         private static InitializerManager _main;
         
@@ -27,10 +29,14 @@ namespace Boids.Managers
         private static int _obstacleIdCounter;
         private static int _predatorIdCounter;
 
+        private static int _numberOfBoids;
+        private static int _numberOfObstacles;
+        private static int _numberOfPredators;
+
         private static int _collisionsWithObstacle;
         private static int _collisionsWithPredator;
 
-        private static int _ticks;
+        private static Timer _timer;
 
         public static InitializerManager GetInstance()
         {
@@ -63,35 +69,146 @@ namespace Boids.Managers
             _collisionsWithObstacle = 0;
             _collisionsWithPredator = 0;
 
-            _ticks = 0;
+            //Start with 100 boids and default settings
+            SetInitialSettings();
+            SetInitialBoids();
+
+            _numberOfBoids = _settings.NumberOfBoids;
+            _numberOfObstacles = _settings.NumberOfObstacles;
+            _numberOfPredators = _settings.NumberOfPredators;
+
+            _timer = new Timer(_settings.Interval);
+            _timer.Elapsed += OnTimedEvent;
         }
 
-        public void StartNewRound(Settings settings)
+        private void SetInitialBoids()
         {
-            //Timer
-            //interval 10
-            while (true)
+            for (var i = 0; i < _settings.NumberOfBoids; i++)
             {
-                //update all boids
+                var boid = _boidManager.CreateNewBoid();
+                boid.Id = _boidIdCounter++;
+                _boids.Add(boid);
             }
         }
 
-        public void AddNewBoid()
+        private void SetInitialSettings()
         {
-            var newBoid = _boidManager.InitBoid();
-            newBoid.Id = _boidIdCounter++;
-            _boids.Add(newBoid);
-            _hub.Clients.All.addNewBoid(newBoid);
+            _settings = _settingsManager.GetInitialSettings();
+        }
+        #endregion
+
+        #region Runtime Methods
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            //Main loop
+            _boidManager.CalculateNewVelocityForBoids(_boids, _settings);
+            SendBoidListToClient();
+
+            SendObstacleListToClient();
+
+            //_predatorManager.UpdatePredators();
+            //SendPredatorListToClient();
         }
 
-        public void GetBoidList()
+        public void StartFlocking()
         {
-            _hub.Clients.All.logBoidList(_boids);
-        }
-
-        public void SpawnNewPredator()
-        {
+            _timer.Enabled = true;
             
         }
+
+        public void StopFlocking()
+        {
+            _timer.Enabled = false;
+        }
+        #endregion
+
+        #region Update Methods
+        public void UpdateSettings(Settings settings)
+        {
+            _settings = settings;
+            _timer.Interval = _settings.Interval;
+
+            //If different number of boids
+            if (settings.NumberOfBoids > _numberOfBoids)
+            {
+                //Add boids
+                var startIndex = _numberOfBoids;
+                var endIndex = _settings.NumberOfBoids;
+
+                _numberOfBoids = _settings.NumberOfBoids;
+                
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var boid = _boidManager.CreateNewBoid();
+                    boid.Id = _boidIdCounter++;
+                    _boids.Add(boid);
+                }
+            }
+            else if(settings.NumberOfBoids < _numberOfBoids)
+            {
+                //Remove boids
+                var startIndex = _settings.NumberOfBoids;
+                var endIndex = _numberOfBoids;
+
+                _boidIdCounter = _settings.NumberOfBoids;
+                _numberOfBoids = _settings.NumberOfBoids;
+
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var boid = _boids.FirstOrDefault(x => x.Id == i);
+                    _boids.Remove(boid);
+                }
+            }
+
+            //If different number of obstacles
+            if (settings.NumberOfObstacles > _numberOfObstacles)
+            {
+                //Add obstacle
+                var startIndex = _numberOfObstacles;
+                var endIndex = _settings.NumberOfObstacles;
+
+                _numberOfObstacles = _settings.NumberOfObstacles;
+
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var obstacle = _obstacleManager.CreateNewObstacle();
+                    obstacle.Id = _obstacleIdCounter++;
+                    _obstacles.Add(obstacle);
+                }
+            }
+            else if (settings.NumberOfObstacles < _numberOfObstacles)
+            {
+                //Remove boids
+                var startIndex = _settings.NumberOfObstacles;
+                var endIndex = _numberOfObstacles;
+
+                _obstacleIdCounter = _settings.NumberOfObstacles;
+                _numberOfObstacles = _settings.NumberOfObstacles;
+
+                for (var i = startIndex; i < endIndex; i++)
+                {
+                    var obstacle = _obstacles.FirstOrDefault(x => x.Id == i);
+                    _obstacles.Remove(obstacle);
+                }
+            }
+        }
+        #endregion
+
+        #region Client methods
+        public void SendSettingsToClient()
+        {
+            _hub.Clients.All.hubSetSettings(_settings);
+        }
+
+        public void SendBoidListToClient()
+        {
+            _hub.Clients.All.hubDrawBoidList(_boids);
+        }
+
+        public void SendObstacleListToClient()
+        {
+            _hub.Clients.All.hubDrawObstacleList(_obstacles);
+        }
+        #endregion
     }
 }

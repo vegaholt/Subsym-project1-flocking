@@ -7,43 +7,46 @@ namespace Boids.Models
         [JsonProperty("numberOfBoids")]
         public int NumberOfBoids { get; set; }
 
-        [JsonProperty("numberOfPredators")]
-        public int NumberOfPredators { get; set; }
-
         [JsonProperty("numberOfObstacles")]
         public int NumberOfObstacles { get; set; }
+
+        [JsonProperty("numberOfPredators")]
+        public int NumberOfPredators { get; set; }
 
         [JsonProperty("boidRadius")]
         public int BoidRadius { get; set; }
 
-        [JsonProperty("predatorRadius")]
-        public int PredatorRadius { get; set; }
-
         [JsonProperty("obstacleRadius")]
         public int ObstacleRadius { get; set; }
 
+        [JsonProperty("predatorRadius")]
+        public int PredatorRadius { get; set; }
+
         [JsonProperty("separationWeight")]
-        public int SeparationWeight { get; set; }
+        public double SeparationWeight { get; set; }
 
         [JsonProperty("alignmentWeight")]
-        public int AlignmentWeight { get; set; }
+        public double AlignmentWeight { get; set; }
 
         [JsonProperty("cohesionWeight")]
-        public int CohesionWeight { get; set; }
+        public double CohesionWeight { get; set; }
 
         [JsonProperty("maxVelocityBoid")]
-        public float MaxVelocityBoid { get; set; }
+        public double MaxVelocityBoid { get; set; }
 
         [JsonProperty("maxVelocityPredator")]
-        public float MaxVelocityPredator { get; set; }
+        public double MaxVelocityPredator { get; set; }
 
         [JsonProperty("neighbourRadiusBoid")]
-        public float NeighbourRadiusBoid { get; set; }
+        public double NeighbourRadiusBoid { get; set; }
 
         [JsonProperty("collisionRadiusBoid")]
-        public float CollisionRadiusBoid { get; set; }
+        public double CollisionRadiusBoid { get; set; }
 
         [JsonProperty("threathDetectionRadius")]
-        public float ThreathDetectionRadius { get; set; }
+        public double ThreathDetectionRadius { get; set; }
+
+        [JsonProperty("interval")]
+        public double Interval { get; set; }
     }
 }
