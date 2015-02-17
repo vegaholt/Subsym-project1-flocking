@@ -85,7 +85,7 @@ namespace Boids.Managers
         {
             for (var i = 0; i < _settings.NumberOfBoids; i++)
             {
-                var boid = _boidManager.CreateNewBoid();
+                var boid = _boidManager.CreateNewBoid(_settings);
                 boid.Id = _boidIdCounter++;
                 _boids.Add(boid);
             }
@@ -139,7 +139,7 @@ namespace Boids.Managers
                 
                 for (var i = startIndex; i < endIndex; i++)
                 {
-                    var boid = _boidManager.CreateNewBoid();
+                    var boid = _boidManager.CreateNewBoid(_settings);
                     boid.Id = _boidIdCounter++;
                     _boids.Add(boid);
                 }

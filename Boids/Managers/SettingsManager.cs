@@ -8,21 +8,21 @@ namespace Boids.Managers
         {
             return new Settings
             {
-                NumberOfBoids = 2,
+                NumberOfBoids = 150,
                 NumberOfObstacles = 0,
                 NumberOfPredators = 0,
-                BoidRadius = 10,
+                BoidRadius = 5,
                 ObstacleRadius = 40,
                 PredatorRadius = 20,
-                SeparationWeight = 0.5,
-                AlignmentWeight = 0.5,
-                CohesionWeight = 0.5,
-                MaxVelocityBoid = 2,
-                MaxVelocityPredator = 1.5,
-                NeighbourRadiusBoid = 100,
-                CollisionRadiusBoid = 50,
+                SeparationWeight = 0.8,
+                AlignmentWeight = 0.7,
+                CohesionWeight = 0.01,
+                MaxVelocityBoid = 8,
+                MaxVelocityPredator = 6,
+                NeighbourRadiusBoid = 50,
+                CollisionRadiusBoid = 20,
                 ThreathDetectionRadius = 150,
-                Interval = 200
+                Interval = 50
             };
         }
     }

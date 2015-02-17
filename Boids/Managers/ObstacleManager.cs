@@ -10,7 +10,7 @@ namespace Boids.Managers
         {
             var obstacle = new Obstacle
             {
-                Position = new Position { X = BoidHelper.GetRandomNumber(10, 90), Y = BoidHelper.GetRandomNumber(10, 90) },
+                Position = new Position { X = BoidHelper.GetRandomNumber(100, 700), Y = BoidHelper.GetRandomNumber(100, 500) },
             };
 
             return obstacle;

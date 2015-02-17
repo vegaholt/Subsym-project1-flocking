@@ -9,7 +9,7 @@ namespace Boids.Helpers
 
         public static double GetRandomNumber(double min, double max)
         {
-            return (double) (min + RandomGenerator.NextDouble() * (max - min));
+            return Math.Round((min + RandomGenerator.NextDouble() * (max - min)), 10);
         }
 
         public static Velocity AdjustVelocity(Velocity velocity, double maxVelocity)
@@ -21,8 +21,8 @@ namespace Boids.Helpers
 
             var newVelocity = new Velocity()
             {
-                X = (double)(velocity.X * scale),
-                Y = (double)(velocity.Y * scale)
+                X = Math.Round((velocity.X * scale), 5),
+                Y = Math.Round((velocity.Y * scale), 5)
             };
 
             return newVelocity;
